@@ -1,7 +1,7 @@
 package org.example.miniusos.service;
 
 import org.example.miniusos.dto.GradeDto;
-import org.example.miniusos.exception.StudentNotFoundException;
+import org.example.miniusos.exception.ResourceNotFoundException;
 import org.example.miniusos.model.Grade;
 import org.example.miniusos.model.Student;
 import org.example.miniusos.repository.GradeRepository;
@@ -23,12 +23,19 @@ public class GradeService {
 
     public GradeDto addGrade(Long studentId, GradeDto gradeDto){
         Student student = studentRepository.findById(studentId)
-                .orElseThrow(() -> new StudentNotFoundException(studentId));
+                .orElseThrow(() -> new ResourceNotFoundException("student", studentId));
 
         Grade grade = new Grade(gradeDto.score(), gradeDto.subjectName(), student);
         grade = gradeRepository.save(grade);
 
         return mapToDto(grade);
+    }
+
+    public void deleteGradeById(Long id){
+        if (!gradeRepository.existsById(id)) {
+            throw new ResourceNotFoundException("grade", id);
+        }
+        gradeRepository.deleteById(id);
     }
 
     public List<GradeDto> getAllGradesByStudentId(Long studentId){
@@ -39,6 +46,6 @@ public class GradeService {
     }
 
     private GradeDto mapToDto(Grade grade) {
-        return new GradeDto(grade.getScore(), grade.getSubjectName());
+        return new GradeDto(grade.getId(), grade.getScore(), grade.getSubjectName());
     }
 }

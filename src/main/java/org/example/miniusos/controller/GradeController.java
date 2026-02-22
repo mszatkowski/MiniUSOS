@@ -1,5 +1,6 @@
 package org.example.miniusos.controller;
 
+import jakarta.validation.Valid;
 import org.example.miniusos.dto.GradeDto;
 import org.example.miniusos.service.GradeService;
 import org.springframework.http.HttpStatus;
@@ -19,7 +20,7 @@ public class GradeController {
     }
 
     @PostMapping("/{studentId}")
-    public ResponseEntity<GradeDto> addGradeToStudentById(@PathVariable Long studentId, @RequestBody GradeDto gradeDto){
+    public ResponseEntity<GradeDto> addGradeToStudentById(@PathVariable Long studentId, @Valid @RequestBody GradeDto gradeDto){
         GradeDto savedGrade = gradeService.addGrade(studentId, gradeDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedGrade);
     }
@@ -27,5 +28,11 @@ public class GradeController {
     @GetMapping("/{studentId}")
     public ResponseEntity<List<GradeDto>> getAllGradesByStudentId(@PathVariable Long studentId){
         return ResponseEntity.ok(gradeService.getAllGradesByStudentId(studentId));
+    }
+
+    @DeleteMapping("/{gradeId}")
+    public ResponseEntity<Void> deleteGradeById(@PathVariable Long gradeId){
+        gradeService.deleteGradeById(gradeId);
+        return ResponseEntity.noContent().build();
     }
 }

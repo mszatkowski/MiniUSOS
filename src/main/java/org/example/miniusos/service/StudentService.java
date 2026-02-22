@@ -1,7 +1,7 @@
 package org.example.miniusos.service;
 
 import org.example.miniusos.dto.StudentDto;
-import org.example.miniusos.exception.StudentNotFoundException;
+import org.example.miniusos.exception.ResourceNotFoundException;
 import org.example.miniusos.model.Student;
 import org.example.miniusos.repository.StudentRepository;
 import org.springframework.stereotype.Service;
@@ -29,19 +29,19 @@ public class StudentService {
     }
 
     public StudentDto getStudentById(Long id){
-        return mapToDto(studentRepository.findById(id).orElseThrow(() -> new StudentNotFoundException(id)));
+        return mapToDto(studentRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("student", id)));
     }
 
     public void deleteStudentById(Long id){
         if (!studentRepository.existsById(id)) {
-            throw new StudentNotFoundException(id);
+            throw new ResourceNotFoundException("student", id);
         }
         studentRepository.deleteById(id);
     }
 
     public StudentDto updateStudentById(Long id, StudentDto studentUpdates) {
         Student student = studentRepository.findById(id)
-                .orElseThrow(() -> new StudentNotFoundException(id));
+                .orElseThrow(() -> new ResourceNotFoundException("student", id));
 
         student.updateFrom(mapToEntity(studentUpdates));
         return mapToDto(studentRepository.save(student));

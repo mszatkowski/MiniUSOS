@@ -1,5 +1,6 @@
 package org.example.miniusos.controller;
 
+import jakarta.validation.Valid;
 import org.example.miniusos.dto.StudentDto;
 import org.example.miniusos.service.StudentService;
 import org.springframework.http.HttpStatus;
@@ -29,7 +30,7 @@ public class StudentController {
     }
 
     @PostMapping
-    public ResponseEntity<StudentDto> addStudent(@RequestBody StudentDto student){
+    public ResponseEntity<StudentDto> addStudent(@Valid @RequestBody StudentDto student){
         StudentDto savedStudents = studentService.addStudent(student);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedStudents);
     }
@@ -41,7 +42,7 @@ public class StudentController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<StudentDto> updateStudent(@PathVariable Long id, @RequestBody StudentDto studentUpdates){
+    public ResponseEntity<StudentDto> updateStudent(@PathVariable Long id, @Valid @RequestBody StudentDto studentUpdates){
         StudentDto updatedStudent = studentService.updateStudentById(id, studentUpdates);
         return ResponseEntity.ok(updatedStudent);
     }

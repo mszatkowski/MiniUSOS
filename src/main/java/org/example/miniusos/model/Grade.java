@@ -12,14 +12,14 @@ public class Grade {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String score;
+    private int score;
     private String subjectName;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "student_id")
     private Student student;
 
-    public Grade(String score, String subjectName, Student student) {
+    public Grade(int score, String subjectName, Student student) {
         this.score = score;
         this.subjectName = subjectName;
         this.student = student;

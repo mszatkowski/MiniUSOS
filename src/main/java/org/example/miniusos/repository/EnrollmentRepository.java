@@ -1,10 +1,11 @@
 package org.example.miniusos.repository;
 
-import org.example.miniusos.model.Course;
+
+import org.example.miniusos.model.Enrollment;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface CourseRepository extends JpaRepository<Course, Long> {
-    boolean existsByName(String name);
+public interface EnrollmentRepository extends JpaRepository<Enrollment, Long> {
+
 }

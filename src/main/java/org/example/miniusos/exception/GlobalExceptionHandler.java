@@ -29,4 +29,28 @@ public class GlobalExceptionHandler {
         errorResponse.put("error", exception.getMessage());
         return errorResponse;
     }
+
+    @ResponseStatus(HttpStatus.CONFLICT)
+    @ExceptionHandler(DuplicateResourceException.class)
+    public Map<String, String> handleDuplicateResourceException(DuplicateResourceException exception) {
+        Map<String, String> errorResponse = new HashMap<>();
+        errorResponse.put("error", exception.getMessage());
+        return errorResponse;
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(StudentNotEnrolledException.class)
+    public Map<String, String> handleStudentNotEnrolledException(StudentNotEnrolledException exception) {
+        Map<String, String> errorResponse = new HashMap<>();
+        errorResponse.put("error", exception.getMessage());
+        return errorResponse;
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(StudentAlreadyEnrolledException.class)
+    public Map<String, String> handleStudentAlreadyEnrolledException(StudentAlreadyEnrolledException exception) {
+        Map<String, String> errorResponse = new HashMap<>();
+        errorResponse.put("error", exception.getMessage());
+        return errorResponse;
+    }
 }

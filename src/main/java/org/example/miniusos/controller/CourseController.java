@@ -1,7 +1,7 @@
 package org.example.miniusos.controller;
 
 import jakarta.validation.Valid;
-import org.example.miniusos.dto.CourseDto;
+import org.example.miniusos.dto.course.*;
 import org.example.miniusos.service.CourseService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,22 +20,27 @@ public class CourseController {
     }
 
     @GetMapping
-    public ResponseEntity<List<CourseDto>> getAllCourses() {
+    public ResponseEntity<List<ResponseCourseDto>> getAllCourses() {
         return ResponseEntity.ok(courseService.getAllCourses());
     }
 
     @GetMapping("/{courseId}")
-    public ResponseEntity<CourseDto> getCourseById(@PathVariable Long courseId){
+    public ResponseEntity<ResponseCourseDto> getCourseById(@PathVariable Long courseId){
         return ResponseEntity.ok(courseService.getCourseById(courseId));
     }
 
     @PostMapping
-    public ResponseEntity<CourseDto> addCourse(@Valid @RequestBody CourseDto courseDto){
+    public ResponseEntity<ResponseCourseDto> addCourse(@Valid @RequestBody CreateCourseDto courseDto){
         return ResponseEntity.status(HttpStatus.CREATED).body(courseService.addCourse(courseDto));
     }
 
+    @PatchMapping("/{courseId}")
+    public ResponseEntity<ResponseCourseDto> updateCourseById(@PathVariable Long courseId, @Valid @RequestBody UpdateCourseDto courseUpdates) {
+        return ResponseEntity.ok(courseService.updateCourseById(courseId, courseUpdates));
+    }
+
     @DeleteMapping("/{courseId}")
-    public ResponseEntity<CourseDto> deleteCourseById(@PathVariable Long courseId){
+    public ResponseEntity<Void> deleteCourseById(@PathVariable Long courseId){
         courseService.deleteCourseById(courseId);
         return ResponseEntity.noContent().build();
     }

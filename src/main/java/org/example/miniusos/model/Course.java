@@ -1,6 +1,7 @@
 package org.example.miniusos.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -18,6 +19,7 @@ public class Course {
     private Long id;
 
     @Column(unique = true)
+    @NotBlank
     private String name;
 
     private int ectsPoints;
@@ -25,6 +27,11 @@ public class Course {
     public Course(String name, int ectsPoints) {
         this.name = name;
         this.ectsPoints = ectsPoints;
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 
     @Override

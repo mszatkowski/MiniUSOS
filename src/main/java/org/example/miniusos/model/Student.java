@@ -1,6 +1,7 @@
 package org.example.miniusos.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,32 +21,32 @@ public class Student {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank
     private String firstName;
+
+    @NotBlank
     private String lastName;
 
     @Column(unique = true)
+    @NotBlank
     private String indexNumber;
 
-    @ManyToMany
-    @JoinTable(
-            name = "student_course",
-            joinColumns = @JoinColumn(name = "student_id"),
-            inverseJoinColumns = @JoinColumn(name = "course_id")
-    )
-    private Set<Course> courses = new HashSet<>();
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Enrollment> enrollments = new HashSet<>();
 
-    public void updateFrom(Student studentUpdates) {
-        if (studentUpdates.getFirstName() != null) {
-            this.firstName = studentUpdates.getFirstName();
-        }
+    public Student(String firstName, String lastName, String indexNumber) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.indexNumber = indexNumber;
+    }
 
-        if (studentUpdates.getLastName() != null) {
-            this.lastName = studentUpdates.getLastName();
-        }
+    public void enrollInCourse(Course course) {
+        Enrollment enrollment = new Enrollment(this, course);
+        enrollments.add(enrollment);
+    }
 
-        if (studentUpdates.getIndexNumber() != null) {
-            this.indexNumber = studentUpdates.getIndexNumber();
-        }
+    public void unenrollInCourse(Course course) {
+        enrollments.removeIf(enrollment -> enrollment.getCourse().equals(course));
     }
 
     @Override

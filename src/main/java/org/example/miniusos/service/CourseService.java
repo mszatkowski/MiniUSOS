@@ -1,48 +1,73 @@
 package org.example.miniusos.service;
 
-import org.example.miniusos.dto.CourseDto;
+import org.example.miniusos.dto.course.*;
+import org.example.miniusos.exception.DuplicateResourceException;
 import org.example.miniusos.exception.ResourceNotFoundException;
+import org.example.miniusos.mappers.CourseMapper;
 import org.example.miniusos.model.Course;
 import org.example.miniusos.repository.CourseRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
+@Transactional(readOnly = true)
 public class CourseService {
 
     private final CourseRepository courseRepository;
+    private final CourseMapper courseMapper;
 
-    public CourseService(CourseRepository courseRepository) {
+    public CourseService(CourseRepository courseRepository, CourseMapper courseMapper) {
         this.courseRepository = courseRepository;
+        this.courseMapper = courseMapper;
     }
 
-    public List<CourseDto> getAllCourses() {
+    public List<ResponseCourseDto> getAllCourses() {
         return courseRepository.findAll()
                 .stream()
-                .map(this::mapToDto)
+                .map(courseMapper::toDto)
                 .toList();
     }
 
-    public CourseDto getCourseById(Long id) {
-        return mapToDto(courseRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("course", id)));
+    public ResponseCourseDto getCourseById(Long id) {
+        return courseMapper.toDto(courseRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(Course.class, id)));
     }
 
-    public CourseDto addCourse(CourseDto courseDto) {
-        Course course = new Course(courseDto.name(), courseDto.ectsPoints());
+    @Transactional
+    public ResponseCourseDto addCourse(CreateCourseDto courseDto) {
+        if (courseRepository.existsByName(courseDto.name())) {
+            throw new DuplicateResourceException(Course.class, "name", courseDto.name());
+        }
+        Course course = courseMapper.toEntity(courseDto);
         course = courseRepository.save(course);
-        return mapToDto(course);
+
+        return courseMapper.toDto(course);
     }
 
+    @Transactional
     public void deleteCourseById(Long id) {
         if (!courseRepository.existsById(id)) {
-            throw new ResourceNotFoundException("course", id);
+            throw new ResourceNotFoundException(Course.class, id);
         }
         courseRepository.deleteById(id);
     }
 
-    private CourseDto mapToDto(Course course) {
-        return new CourseDto(course.getId(), course.getName(), course.getEctsPoints());
+    @Transactional
+    public ResponseCourseDto updateCourseById(Long id, UpdateCourseDto courseUpdates) {
+        Course course = courseRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(Course.class, id));
+
+        if (courseUpdates.name() != null && !courseUpdates.name().equals(course.getName())) {
+            if (courseRepository.existsByName(courseUpdates.name())) {
+                throw new DuplicateResourceException(Course.class, "name", courseUpdates.name());
+            }
+        }
+
+        courseMapper.updateEntityFromDto(courseUpdates, course);
+        course = courseRepository.save(course);
+
+        return courseMapper.toDto(course);
     }
 }

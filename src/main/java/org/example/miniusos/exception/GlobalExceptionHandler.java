@@ -39,18 +39,12 @@ public class GlobalExceptionHandler {
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(StudentNotEnrolledException.class)
-    public Map<String, String> handleStudentNotEnrolledException(StudentNotEnrolledException exception) {
+    @ExceptionHandler(value = {StudentNotEnrolledException.class, StudentAlreadyEnrolledException.class})
+    public Map<String, String> handleStudentNotEnrolledException(RuntimeException exception) {
         Map<String, String> errorResponse = new HashMap<>();
         errorResponse.put("error", exception.getMessage());
         return errorResponse;
     }
 
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(StudentAlreadyEnrolledException.class)
-    public Map<String, String> handleStudentAlreadyEnrolledException(StudentAlreadyEnrolledException exception) {
-        Map<String, String> errorResponse = new HashMap<>();
-        errorResponse.put("error", exception.getMessage());
-        return errorResponse;
-    }
+
 }

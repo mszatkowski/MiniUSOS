@@ -34,6 +34,9 @@ public class Student {
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Enrollment> enrollments = new HashSet<>();
 
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Grade> grades = new HashSet<>();
+
     public Student(String firstName, String lastName, String indexNumber) {
         this.firstName = firstName;
         this.lastName = lastName;

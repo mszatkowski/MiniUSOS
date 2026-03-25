@@ -2,6 +2,7 @@ package org.example.miniusos.controller;
 
 import jakarta.validation.Valid;
 import org.example.miniusos.dto.course.*;
+import org.example.miniusos.dto.student.ResponseStudentDto;
 import org.example.miniusos.service.CourseService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -43,5 +44,10 @@ public class CourseController {
     public ResponseEntity<Void> deleteCourseById(@PathVariable Long courseId){
         courseService.deleteCourseById(courseId);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{courseName}/students")
+    public ResponseEntity<List<ResponseStudentDto>> getStudentsByCourse(@PathVariable String courseName) {
+        return ResponseEntity.ok(courseService.getAllStudentsByCourseName(courseName));
     }
 }

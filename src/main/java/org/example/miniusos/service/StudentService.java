@@ -67,6 +67,7 @@ public class StudentService {
         }
 
         student.enrollInCourse(course);
+        studentRepository.save(student);
     }
 
     @Transactional

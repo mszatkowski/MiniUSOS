@@ -1,11 +1,14 @@
 package org.example.miniusos.service;
 
 import org.example.miniusos.dto.course.*;
+import org.example.miniusos.dto.student.ResponseStudentDto;
 import org.example.miniusos.exception.DuplicateResourceException;
 import org.example.miniusos.exception.ResourceNotFoundException;
 import org.example.miniusos.mappers.CourseMapper;
+import org.example.miniusos.mappers.StudentMapper;
 import org.example.miniusos.model.Course;
 import org.example.miniusos.repository.CourseRepository;
+import org.example.miniusos.repository.StudentRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,10 +20,14 @@ public class CourseService {
 
     private final CourseRepository courseRepository;
     private final CourseMapper courseMapper;
+    private final StudentRepository studentRepository;
+    private final StudentMapper studentMapper;
 
-    public CourseService(CourseRepository courseRepository, CourseMapper courseMapper) {
+    public CourseService(CourseRepository courseRepository, CourseMapper courseMapper, StudentRepository studentRepository, StudentMapper studentMapper) {
         this.courseRepository = courseRepository;
         this.courseMapper = courseMapper;
+        this.studentRepository = studentRepository;
+        this.studentMapper = studentMapper;
     }
 
     public List<ResponseCourseDto> getAllCourses() {
@@ -69,5 +76,11 @@ public class CourseService {
         course = courseRepository.save(course);
 
         return courseMapper.toDto(course);
+    }
+
+    public List<ResponseStudentDto> getAllStudentsByCourseName(String courseName) {
+        return studentRepository.findByEnrollmentsCourseName(courseName).stream()
+                .map(studentMapper::toDto)
+                .toList();
     }
 }

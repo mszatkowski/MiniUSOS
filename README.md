@@ -1,5 +1,4 @@
 # TODO
-- introduce initial flyway migration - create tables (Course, Enrollment, Grade, Student)
 - for scheduling process: 
   - what tables do we need? 
   - what fields should they have? 
@@ -7,6 +6,31 @@
   - what is the relation between them?
 
 
-- add migration for new tables: StudentGroup, CourseDetail, CourseSchedule, Major*
-- CourseDetail: academic year, 
-- CourseSchedule: 
+ Proposed tables:
+- Course: ..., majorId
+- CourseDetail: courseDetailId, courseId, courseType, hours, majorDetailId
+  - courseType (lecture, project, etc.)
+  - hours (number of hours per semester)
+- CourseSchedule: courseScheduleId, courseDetailId, date, startTime, endTime
+- Employee: employeeId, firstname, lastname
+- EmployeeCourseDetail: employeeCourseDetailId, employeeId, courseDetailId
+- StudentGroup*: studentGroupId, employeeCourseDetailId, groupNumber
+- StudentGroupAssignment*: studentGroupAssignmentId, studentId, studentGroupId, 
+- Major: majorId, name
+- MajorDetail: majorDetailId, majorId, academicYear
+
+TODO:
+* - to consider: different name
+
+- Enrollment: courseId -> courseDetailId
+- add migration for new tables
+- refactor removal -> archivization
+
+- think about how to trigger scheduling process
+  - What would be the best parameters to pass? 
+  - What would be the result of the scheduling?
+
+
+# Invariants
+- Employees are only lecturers
+- Course is always assigned to exactly one major

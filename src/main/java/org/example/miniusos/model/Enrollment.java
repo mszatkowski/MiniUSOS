@@ -26,13 +26,13 @@ public class Enrollment {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "course_id")
-    private Course course;
+    private CourseDetail courseDetail;
 
     private LocalDateTime enrollmentDate;
 
-    public Enrollment(Student student, Course course) {
+    public Enrollment(Student student, CourseDetail courseDetail) {
         this.student = student;
-        this.course = course;
+        this.courseDetail = courseDetail;
         this.enrollmentDate = LocalDateTime.now();
     }
 
@@ -40,11 +40,11 @@ public class Enrollment {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Enrollment that = (Enrollment) o;
-        return Objects.equals(student, that.student) && Objects.equals(course, that.course);
+        return Objects.equals(student, that.student) && Objects.equals(courseDetail, that.courseDetail);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(student, course);
+        return Objects.hash(student, courseDetail);
     }
 }

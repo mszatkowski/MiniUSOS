@@ -2,24 +2,19 @@ package org.example.miniusos.model;
 
 import jakarta.persistence.*;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor
-public class Course {
-
+public class StudentGroupAssignment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    private CourseDetail courseDetail;
+    @OneToOne
+    private Student student;
 
-    @Enumerated(EnumType.STRING)
-    private CourseType courseType;
-
-    private Integer hours;
+    @OneToOne
+    private StudentGroup studentGroup;
 }

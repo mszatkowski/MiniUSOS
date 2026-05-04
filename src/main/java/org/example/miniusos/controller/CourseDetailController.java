@@ -12,31 +12,31 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/courses")
-public class CourseController {
+public class CourseDetailController {
 
     private final CourseService courseService;
 
-    public CourseController(CourseService courseService) {
+    public CourseDetailController(CourseService courseService) {
         this.courseService = courseService;
     }
 
     @GetMapping
-    public ResponseEntity<List<ResponseCourseDto>> getAllCourses() {
+    public ResponseEntity<List<ResponseCourseDetailDto>> getAllCourses() {
         return ResponseEntity.ok(courseService.getAllCourses());
     }
 
     @GetMapping("/{courseId}")
-    public ResponseEntity<ResponseCourseDto> getCourseById(@PathVariable Long courseId){
+    public ResponseEntity<ResponseCourseDetailDto> getCourseById(@PathVariable Long courseId){
         return ResponseEntity.ok(courseService.getCourseById(courseId));
     }
 
     @PostMapping
-    public ResponseEntity<ResponseCourseDto> addCourse(@Valid @RequestBody CreateCourseDto courseDto){
+    public ResponseEntity<ResponseCourseDetailDto> addCourse(@Valid @RequestBody CreateCourseDetailDto courseDto){
         return ResponseEntity.status(HttpStatus.CREATED).body(courseService.addCourse(courseDto));
     }
 
     @PatchMapping("/{courseId}")
-    public ResponseEntity<ResponseCourseDto> updateCourseById(@PathVariable Long courseId, @Valid @RequestBody UpdateCourseDto courseUpdates) {
+    public ResponseEntity<ResponseCourseDetailDto> updateCourseById(@PathVariable Long courseId, @Valid @RequestBody UpdateCourseDetailDto courseUpdates) {
         return ResponseEntity.ok(courseService.updateCourseById(courseId, courseUpdates));
     }
 

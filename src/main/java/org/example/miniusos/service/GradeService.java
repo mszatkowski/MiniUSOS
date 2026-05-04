@@ -4,11 +4,11 @@ import org.example.miniusos.dto.grade.*;
 import org.example.miniusos.exception.ResourceNotFoundException;
 import org.example.miniusos.exception.StudentNotEnrolledException;
 import org.example.miniusos.mappers.GradeMapper;
-import org.example.miniusos.model.Course;
+import org.example.miniusos.model.CourseDetail;
 import org.example.miniusos.model.Enrollment;
 import org.example.miniusos.model.Grade;
 import org.example.miniusos.model.Student;
-import org.example.miniusos.repository.CourseRepository;
+import org.example.miniusos.repository.CourseDetailRepository;
 import org.example.miniusos.repository.GradeRepository;
 import org.example.miniusos.repository.StudentRepository;
 import org.springframework.stereotype.Service;
@@ -22,13 +22,13 @@ public class GradeService {
 
     private final GradeRepository gradeRepository;
     private final StudentRepository studentRepository;
-    private final CourseRepository courseRepository;
+    private final CourseDetailRepository courseDetailRepository;
     private final GradeMapper gradeMapper;
 
-    public GradeService(GradeRepository gradeRepository, StudentRepository studentRepository, CourseRepository courseRepository, GradeMapper gradeMapper) {
+    public GradeService(GradeRepository gradeRepository, StudentRepository studentRepository, CourseDetailRepository courseDetailRepository, GradeMapper gradeMapper) {
         this.gradeRepository = gradeRepository;
         this.studentRepository = studentRepository;
-        this.courseRepository = courseRepository;
+        this.courseDetailRepository = courseDetailRepository;
         this.gradeMapper = gradeMapper;
     }
 
@@ -36,12 +36,12 @@ public class GradeService {
     public ResponseGradeDto addGrade(Long studentId, CreateGradeDto gradeDto){
         Student student = studentRepository.findById(studentId)
                 .orElseThrow(() -> new ResourceNotFoundException(Student.class, studentId));
-        Course course = courseRepository.findById(gradeDto.courseId())
-                .orElseThrow(() -> new ResourceNotFoundException(Course.class, gradeDto.courseId()));
+        CourseDetail courseDetail = courseDetailRepository.findById(gradeDto.courseId())
+                .orElseThrow(() -> new ResourceNotFoundException(CourseDetail.class, gradeDto.courseId()));
 
         boolean isEnrolled = student.getEnrollments().stream()
-                .map(Enrollment::getCourse)
-                .anyMatch(course::equals);
+                .map(Enrollment::getCourseDetail)
+                .anyMatch(courseDetail::equals);
 
         if (!isEnrolled) {
             throw new StudentNotEnrolledException(studentId, gradeDto.courseId());
@@ -49,7 +49,7 @@ public class GradeService {
 
         Grade grade = gradeMapper.toEntity(gradeDto);
         grade.setStudent(student);
-        grade.setCourse(course);
+        grade.setCourseDetail(courseDetail);
 
         grade = gradeRepository.save(grade);
         return gradeMapper.toDto(grade);

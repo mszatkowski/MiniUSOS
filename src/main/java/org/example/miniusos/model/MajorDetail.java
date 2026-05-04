@@ -2,24 +2,18 @@ package org.example.miniusos.model;
 
 import jakarta.persistence.*;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor
-public class Course {
-
+public class MajorDetail {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
-    private CourseDetail courseDetail;
+    private Major major;
 
-    @Enumerated(EnumType.STRING)
-    private CourseType courseType;
-
-    private Integer hours;
+    private Integer academicYear;
 }

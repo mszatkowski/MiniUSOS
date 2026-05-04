@@ -19,7 +19,7 @@ public class Grade {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "course_id")
-    private Course course;
+    private CourseDetail courseDetail;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "student_id")
@@ -33,8 +33,8 @@ public class Grade {
     private String description;
 
 
-    public Grade(Course course, Student student, Integer score, String description) {
-        this.course = course;
+    public Grade(CourseDetail courseDetail, Student student, Integer score, String description) {
+        this.courseDetail = courseDetail;
         this.student = student;
         this.score = score;
         this.description = description;

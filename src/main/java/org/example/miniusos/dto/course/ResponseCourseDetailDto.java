@@ -1,6 +1,6 @@
 package org.example.miniusos.dto.course;
 
-public record ResponseCourseDto(
+public record ResponseCourseDetailDto(
         Long id,
         String name,
         int ectsPoints

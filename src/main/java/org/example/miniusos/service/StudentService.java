@@ -1,18 +1,18 @@
 package org.example.miniusos.service;
 
-import org.example.miniusos.dto.course.ResponseCourseDto;
+import org.example.miniusos.dto.course.ResponseCourseDetailDto;
 import org.example.miniusos.dto.student.CreateStudentDto;
 import org.example.miniusos.dto.student.ResponseStudentDto;
 import org.example.miniusos.dto.student.UpdateStudentDto;
 import org.example.miniusos.exception.DuplicateResourceException;
 import org.example.miniusos.exception.ResourceNotFoundException;
 import org.example.miniusos.exception.StudentAlreadyEnrolledException;
-import org.example.miniusos.mappers.CourseMapper;
+import org.example.miniusos.mappers.CourseDetailMapper;
 import org.example.miniusos.mappers.StudentMapper;
-import org.example.miniusos.model.Course;
+import org.example.miniusos.model.CourseDetail;
 import org.example.miniusos.model.Enrollment;
 import org.example.miniusos.model.Student;
-import org.example.miniusos.repository.CourseRepository;
+import org.example.miniusos.repository.CourseDetailRepository;
 import org.example.miniusos.repository.StudentRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,15 +24,15 @@ import java.util.List;
 public class StudentService {
 
     private final StudentRepository studentRepository;
-    private final CourseRepository courseRepository;
+    private final CourseDetailRepository courseDetailRepository;
     private final StudentMapper studentMapper;
-    private final CourseMapper courseMapper;
+    private final CourseDetailMapper courseDetailMapper;
 
-    public StudentService(StudentRepository studentRepository, CourseRepository courseRepository, StudentMapper studentMapper, CourseMapper courseMapper) {
+    public StudentService(StudentRepository studentRepository, CourseDetailRepository courseDetailRepository, StudentMapper studentMapper, CourseDetailMapper courseDetailMapper) {
         this.studentRepository = studentRepository;
-        this.courseRepository = courseRepository;
+        this.courseDetailRepository = courseDetailRepository;
         this.studentMapper = studentMapper;
-        this.courseMapper = courseMapper;
+        this.courseDetailMapper = courseDetailMapper;
     }
 
     @Transactional
@@ -59,14 +59,14 @@ public class StudentService {
         Student student = studentRepository.findById(studentId)
                 .orElseThrow(() -> new ResourceNotFoundException(Student.class, studentId));
 
-        Course course = courseRepository.findById(courseId)
-                .orElseThrow(() -> new ResourceNotFoundException(Course.class, courseId));
+        CourseDetail courseDetail = courseDetailRepository.findById(courseId)
+                .orElseThrow(() -> new ResourceNotFoundException(CourseDetail.class, courseId));
 
-        if (student.getEnrollments().stream().map(Enrollment::getCourse).anyMatch(course::equals)) {
+        if (student.getEnrollments().stream().map(Enrollment::getCourseDetail).anyMatch(courseDetail::equals)) {
             throw new StudentAlreadyEnrolledException(studentId, courseId);
         }
 
-        student.enrollInCourse(course);
+        student.enrollInCourse(courseDetail);
         studentRepository.save(student);
     }
 
@@ -75,10 +75,10 @@ public class StudentService {
         Student student = studentRepository.findById(studentId)
                 .orElseThrow(() -> new ResourceNotFoundException(Student.class, studentId));
 
-        Course course = courseRepository.findById(courseId)
-                .orElseThrow(() -> new ResourceNotFoundException(Course.class, courseId));
+        CourseDetail courseDetail = courseDetailRepository.findById(courseId)
+                .orElseThrow(() -> new ResourceNotFoundException(CourseDetail.class, courseId));
 
-        student.unenrollInCourse(course);
+        student.unenrollInCourse(courseDetail);
     }
 
     public ResponseStudentDto getStudentById(Long id){
@@ -105,13 +105,13 @@ public class StudentService {
         return studentMapper.toDto(student);
     }
 
-    public List<ResponseCourseDto> getAllCoursesOfStudent(Long studentId){
+    public List<ResponseCourseDetailDto> getAllCoursesOfStudent(Long studentId){
         Student student = studentRepository.findById(studentId)
                 .orElseThrow(() -> new ResourceNotFoundException(Student.class, studentId));
 
         return student.getEnrollments().stream()
-                .map(Enrollment::getCourse)
-                .map(courseMapper::toDto)
+                .map(Enrollment::getCourseDetail)
+                .map(courseDetailMapper::toDto)
                 .toList();
     }
 }

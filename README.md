@@ -30,6 +30,10 @@ TODO:
   - What would be the best parameters to pass? 
   - What would be the result of the scheduling?
 
+- planned features:
+  - Classroom management and search (for courseDetail scheduling)
+   
+
 
 # Invariants
 - Employees are only lecturers

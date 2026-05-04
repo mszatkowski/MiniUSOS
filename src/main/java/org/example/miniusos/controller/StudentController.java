@@ -1,7 +1,7 @@
 package org.example.miniusos.controller;
 
 import jakarta.validation.Valid;
-import org.example.miniusos.dto.course.ResponseCourseDto;
+import org.example.miniusos.dto.course.ResponseCourseDetailDto;
 import org.example.miniusos.dto.grade.CreateGradeDto;
 import org.example.miniusos.dto.grade.ResponseGradeDto;
 import org.example.miniusos.dto.student.CreateStudentDto;
@@ -79,7 +79,7 @@ public class StudentController {
     }
 
     @GetMapping("/{studentId}/courses")
-    public ResponseEntity<List<ResponseCourseDto>> getAllCoursesByStudentId(@PathVariable Long studentId){
+    public ResponseEntity<List<ResponseCourseDetailDto>> getAllCoursesByStudentId(@PathVariable Long studentId){
         return ResponseEntity.ok(studentService.getAllCoursesOfStudent(studentId));
     }
 }

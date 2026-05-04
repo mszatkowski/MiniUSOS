@@ -43,13 +43,13 @@ public class Student {
         this.indexNumber = indexNumber;
     }
 
-    public void enrollInCourse(Course course) {
-        Enrollment enrollment = new Enrollment(this, course);
+    public void enrollInCourse(CourseDetail courseDetail) {
+        Enrollment enrollment = new Enrollment(this, courseDetail);
         enrollments.add(enrollment);
     }
 
-    public void unenrollInCourse(Course course) {
-        enrollments.removeIf(enrollment -> enrollment.getCourse().equals(course));
+    public void unenrollInCourse(CourseDetail courseDetail) {
+        enrollments.removeIf(enrollment -> enrollment.getCourseDetail().equals(courseDetail));
     }
 
     @Override
